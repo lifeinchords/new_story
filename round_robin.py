@@ -1,6 +1,14 @@
 import RPi.GPIO as GPIO
 import time
 
+PROJECT_PATH = "/home/pi/code/new_story"
+SOUND_BITS_PATH = "sounds"
+
+# 0 : local
+# 1: remote
+# TODO: implement logic
+RUN_TYPE = 0
+
 # set numbering scheme, it can get a bit confusing between the actual pin numbers, and the labels 
 # see : http://log.liminastudio.com/writing/tutorials/tutorial-how-to-use-your-raspberry-pi-like-an-arduino
 GPIO.setmode(GPIO.BCM)
@@ -33,12 +41,11 @@ GPIO.setup(GPIO_RECORD, GPIO.IN)
 # TODO:
 
 
-
 # TODO: remove hardcoding
 # most recent bit, 2nd more recent, etc
-MR_BIT 		= "b1.wav"
-2ND_MR_2 	= "b2.wav"
-3RD_MR_3 	= "b3.wav"
+CURRENT_SOUND_BIT		= "b1.wav"
+SECOND_MR_SOUND_BIT	 	= "b2.wav"
+THIRD_MR_SOUND_BIT		= "b3.wav"
 
 
 # get story size
@@ -52,16 +59,16 @@ last_reading = 0
 
 while True:
 	
-	this_reading = GPIO.input(pin)
+	this_reading = GPIO.input(GPIO_PLAY_SWITCH_3)
 
 	if ((not last_reading) and this_reading):
-		print (str(pin) + " : pressed")
+		print (str(GPIO_PLAY_SWITCH_3) + " : pressed")
 		
 		from subprocess import call
 		# call(["ls", "-l"])
 
 		# play
-		call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", SOUND_BIT_1)
+		call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + CURRENT_SOUND_BIT])
 
 		# record
 		# call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "t52.wav"])
