@@ -14,27 +14,21 @@ RUN_TYPE = 0
 GPIO.setmode(GPIO.BCM)
 
 # 3 momentary buttons, for playing separate audio files
-# using Raspberry Pi built in pullup resistors
-
-# note, while you can use any I/O pins on the Pi,
-# only some of the have a built in pull-up resistor, which is needed for the switches to work properly
-# if you use other pins, you'll have to implement your own
-
-# see:
-# http://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/robot/buttons_and_switches/
-
-GPIO_PLAY_SWITCH_1 = 0  # this pin has an internal pullup resistor
-GPIO_PLAY_SWITCH_2 = 1 	# this pin has an internal pullup resistor
-GPIO_PLAY_SWITCH_3 = 24  # no more, wire up a pull up resistor to any pin you use..
+GPIO_PLAY_SWITCH_1 = 0  
+GPIO_PLAY_SWITCH_2 = 1 	
+GPIO_PLAY_SWITCH_3 = 24  
 
 # 1 momentary button for triggering a sound recording
 GPIO_RECORD = 1
 
 
-# set up pins for switches
-GPIO.setup(GPIO_PLAY_SWITCH_1, GPIO.IN)
-GPIO.setup(GPIO_PLAY_SWITCH_2, GPIO.IN)
-GPIO.setup(GPIO_PLAY_SWITCH_3, GPIO.IN)
+# set up pins for switches, as inputs with pull up resistors
+# prevents having to do them in hardware
+# more: http://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/robot/buttons_and_switches/
+GPIO.setup(GPIO_PLAY_SWITCH_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_PLAY_SWITCH_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(GPIO_PLAY_SWITCH_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 GPIO.setup(GPIO_RECORD, GPIO.IN)
 
 # set up pins for LED's (feedback when files are playing/recording)
