@@ -29,7 +29,7 @@ while True:
 		# call(["ls", "-l"])
 
 		# play
-		call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", SOUND_BIT_1, "&"])
+		call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", SOUND_BIT_1)
 
 		# record
 		# call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "t52.wav"])
