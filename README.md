@@ -46,19 +46,10 @@ TODO:
 - local mode ( all files are stored and played locally)
 - remote (all recordings are pushed to web server, streamed during play)
 - encode file
-
 - more efficient switch debouncer, instead of using loops
-http://www.adafruit.com/blog/2009/10/20/example-code-for-multi-button-checker-with-debouncing/
-
+  adapt from Arudio code: http://www.adafruit.com/blog/2009/10/20/example-code-for-multi-button-checker-with-debouncing/
 - add interrupt capability, so hitting buttons 1-3 button stops playback of other playing files, and triggers selected 
+  http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio
 
 
-
-************************************************************
-
-RESOURCES
-
-http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio
-http://www.raspberrypi.org/phpBB3/viewtopic.php?f=32&t=40675
-http://stackoverflow.com/questions/10058368/background-process-subprocess-popen-with-pipe
 

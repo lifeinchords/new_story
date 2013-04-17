@@ -2,9 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # set numbering scheme, it can get a bit confusing between the actual pin numbers, and the labels 
-# http://elinux.org/RPi_Low-level_peripherals#General_Purpose_Input.2FOutput_.28GPIO.29
-
-# see : 
+# see : http://log.liminastudio.com/writing/tutorials/tutorial-how-to-use-your-raspberry-pi-like-an-arduino
 GPIO.setmode(GPIO.BCM)
 
 # 3 momentary buttons, for playing separate audio files
@@ -15,12 +13,11 @@ GPIO.setmode(GPIO.BCM)
 # if you use other pins, you'll have to implement your own
 
 # see:
-# http://cl.ly/image/033W1o162I3M
 # http://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/robot/buttons_and_switches/
 
-GPIO_PLAY_SWITCH_1 = 24
-GPIO_PLAY_SWITCH_3 = 2
-GPIO_PLAY_SWITCH_2 = 3
+GPIO_PLAY_SWITCH_1 = 0  # this pin has an internal pullup resistor
+GPIO_PLAY_SWITCH_2 = 1 	# this pin has an internal pullup resistor
+GPIO_PLAY_SWITCH_3 = 24  # no more, wire up a pull up resistor to any pin you use..
 
 # 1 momentary button for triggering a sound recording
 GPIO_RECORD = 1
@@ -36,13 +33,21 @@ GPIO.setup(GPIO_RECORD, GPIO.IN)
 # TODO:
 
 
+
 # TODO: remove hardcoding
-SOUND_BIT_1 = "b1.wav"
-SOUND_BIT_2 = "b2.wav"
-SOUND_BIT_3 = "b3.wav"
+# most recent bit, 2nd more recent, etc
+MR_BIT 		= "b1.wav"
+2ND_MR_2 	= "b2.wav"
+3RD_MR_3 	= "b3.wav"
 
 
-count = 0
+# get story size
+# TODO: 
+# if local: read number of files in designated directory 
+# if remote: request count
+bit_count = 0
+
+
 last_reading = 0
 
 while True:
