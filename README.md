@@ -48,6 +48,7 @@ TODO:
 - encode file
 - more efficient switch debouncer, instead of using loops
   adapt from Arudio code: http://www.adafruit.com/blog/2009/10/20/example-code-for-multi-button-checker-with-debouncing/
+  or https://code.google.com/p/raspberry-gpio-python/wiki/Inputs
 - add interrupt capability, so hitting buttons 1-3 button stops playback of other playing files, and triggers selected 
   http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio
 
