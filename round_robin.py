@@ -17,26 +17,48 @@ import time
 #           FUNCTION DEFS
 # ******************************************
 
-def play_sound( message, pin ):
-    print "Play      : "
-    print "  switch  : "
-    print "  pin     : "
+def play_sound( filename ):
 
-    return
+  print "playing : " + filename
+
+  # from subprocess import call
+  # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
+    
+  return
 
 
 def record_sound( message, pin ):
-    print "Record      : "
-    print "  switch  : "
-    print "  pin     : "
 
-    return
+  # from subprocess import call
+  # record routine here
+
+  return
 
 
 
-def button_callback(channel):  
-     print(strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : Edge detected on channel %s'%channel) 
-  
+def button_callback( channel ):  
+
+    if channel == PLAY_SWITCH_1:
+      play_sound("b1.wav")
+      press = "play 1"
+
+    elif channel == PLAY_SWITCH_2:
+      play_sound("b2.wav")
+      press = "play 2"
+
+    elif channel == PLAY_SWITCH_3:
+      play_sound("b3.wav")
+      press = "play 3"
+
+
+    elif channel == RECORD_SWITCH:
+      press = "record"
+
+    else:
+      press = " not wired"
+
+    print(strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : pin %s'%channel + " : " + press) 
+    print
 
 
 # ******************************************
