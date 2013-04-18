@@ -31,6 +31,8 @@ def record_sound( message, pin ):
 
   # from subprocess import call
   # record routine here
+
+  print "reocording : " + filename
   call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
   call (["normalize-audio", "sounds/" + filename ])
   return
@@ -50,7 +52,6 @@ def button_callback( channel ):
     elif channel == PLAY_SWITCH_3:
       play_sound("b3.wav")
       press = "play 3"
-
 
     elif channel == RECORD_SWITCH:
       press = "record"
@@ -95,7 +96,7 @@ PLAY_SWITCH_3 = 25
 
 # 1 momentary button for triggering a sound recording
 # with corresponding LED
-RECORD_SWITCH = 8
+RECORD_SWITCH = 27
 # RECORD_LED    = 11
 
 
@@ -139,7 +140,7 @@ GPIO.add_event_detect(RECORD_SWITCH, GPIO.BOTH, callback=button_callback, bounce
 #           MAIN
 # ******************************************
 
-raw_input('stop for now')
+raw_input('chillin .. . .')
 
 # try:
 #     GPIO.wait_for_edge(PLAY_SWITCH_1, GPIO.FALLING) # Falling edge detected. script continues
