@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 
-pinNum = 25
+pinNum = 7
 
 GPIO.setmode(GPIO.BCM) #numbering scheme that corresponds to breakout board and pin layout
 GPIO.setup(pinNum,GPIO.OUT) #replace pinNum with whatever pin you used, this sets up that pin as an output
