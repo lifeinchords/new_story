@@ -23,7 +23,7 @@ def play_sound( filename ):
 
   from subprocess import call
   call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
-    
+
   return
 
 
@@ -31,7 +31,8 @@ def record_sound( message, pin ):
 
   # from subprocess import call
   # record routine here
-
+  call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
+  call (["normalize-audio", "sounds/" + filename ])
   return
 
 
@@ -117,15 +118,6 @@ GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 
-# TODO: remove hardcoding
-# most recent bit, 2nd more recent, etc
-
-NEW_BIT             = "new_bit.wav"
-FIRST_SOUND_BIT     = "bit_1.wav"
-SECOND_MR_SOUND_BIT = "bit_2.wav"
-THIRD_MR_SOUND_BIT  = "bit_3.wav"
-
-
 # get story size
 # TODO: 
 # if local: read number of files in designated directory 
@@ -170,7 +162,6 @@ raw_input('stop for now')
 
 #     else:
 #         print "record"
-#         # call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
   
 
     

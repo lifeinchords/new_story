@@ -43,9 +43,28 @@ patience!
 
 TODO: 
 
+- trigger record button push sound file to round robin 
+- push sound file to round robin
+- record confirm 
+- play all submissions
+- fade sound in and out, trim sound file
+- combine steps into one process
+
+
+V2:
+- flash LED when playing or recording
+- recording: flash faster as time is running out
+- confirm, rerecord mechanism
+- dont attempt to play file if alsa is in use
 - prevent simoultaneous button presses
 - local mode ( all files are stored and played locally)
 - remote (all recordings are pushed to web server, streamed during play)
-- encode file
+- encode file with libshine after record
+- encode on the fly 
+- logging
+- low pass filter
+- set up wifi, vs LAN
+- run Pi off solar
+- 
 
 
