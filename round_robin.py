@@ -33,6 +33,9 @@ def record_sound( message, pin ):
   # record routine here
 
   print "reocording : " + filename
+  call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/countdown-v2.wav"])
+
+
   call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
   call (["normalize-audio", "sounds/" + filename ])
   return
