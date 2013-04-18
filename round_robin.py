@@ -6,20 +6,45 @@
 # http://raspi.tv/tag/multiple-threaded-callbacks-in-rpi-gpio-with-python-on-the-raspberry-pi
 
 
-def play_sound( message ):
-	print "* enter playing sound ... "
-
-   return
-
-
-def record_sound:
-	print "* enter recording sound ... "
-	return
-
-
 
 import RPi.GPIO as GPIO
+from time import gmtime, strftime
 import time
+
+
+
+# ******************************************
+#           FUNCTION DEFS
+# ******************************************
+
+def play_sound( message, pin ):
+    print "Play      : "
+    print "  switch  : "
+    print "  pin     : "
+
+    return
+
+
+def record_sound( message, pin ):
+    print "Record      : "
+    print "  switch  : "
+    print "  pin     : "
+
+    return
+
+
+
+def button_callback(channel):  
+     print(strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : Edge detected on channel %s'%channel) 
+  
+
+
+# ******************************************
+#           INITIALIZE
+# ******************************************
+
+# raw_input('stop for now')
+
 
 PROJECT_PATH = "/home/pi/code/new_story"
 SOUND_BITS_PATH = "sounds"
@@ -36,19 +61,19 @@ GPIO.setmode(GPIO.BCM)
 
 # 3 momentary buttons, for playing separate audio files
 # each button has corresponding LED 
-PLAY_SWITCH_1 = 17
-# PLAY_LED_1	= 18
+PLAY_SWITCH_1 = 23
+# PLAY_LED_1    = 17
 
-PLAY_SWITCH_2 = 22
-# PLAY_LED_2	= 23
+PLAY_SWITCH_2 = 24
+# PLAY_LED_2    = 22
 
 PLAY_SWITCH_3 = 25  
-# PLAY_LED_3	= 9
+# PLAY_LED_3    = 9
 
 # 1 momentary button for triggering a sound recording
 # with corresponding LED
 RECORD_SWITCH = 8
-# RECORD_LED	= 11
+# RECORD_LED    = 11
 
 
 
@@ -73,10 +98,10 @@ GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # TODO: remove hardcoding
 # most recent bit, 2nd more recent, etc
 
-NEW_BIT				= "new_bit.wav"
-FIRST_SOUND_BIT		= "bit_1.wav"
-SECOND_MR_SOUND_BIT	= "bit_2.wav"
-THIRD_MR_SOUND_BIT	= "bit_3.wav"
+NEW_BIT             = "new_bit.wav"
+FIRST_SOUND_BIT     = "bit_1.wav"
+SECOND_MR_SOUND_BIT = "bit_2.wav"
+THIRD_MR_SOUND_BIT  = "bit_3.wav"
 
 
 # get story size
@@ -87,41 +112,63 @@ bit_count = 0
 
 
 
-try:
-    GPIO.wait_for_edge(PIN, GPIO.FALLING) # Falling edge detected. script continues
+
+# when a falling edge is detected, regardless of whatever   
+# else is happening in the program, the function my_callback will be run  
+GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.BOTH, callback=button_callback, bouncetime=200) 
+GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.BOTH, callback=button_callback, bouncetime=200) 
+GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.BOTH, callback=button_callback, bouncetime=200) 
+GPIO.add_event_detect(RECORD_SWITCH, GPIO.BOTH, callback=button_callback, bouncetime=200) 
+
+
+# ******************************************
+#           MAIN
+# ******************************************
+
+raw_input('stop for now')
+
+# try:
+#     GPIO.wait_for_edge(PLAY_SWITCH_1, GPIO.FALLING) # Falling edge detected. script continues
     
-    # determine to play or record
-    # TODO: 
+#     # determine to play or record
+#     # TODO: 
 
-    if 
-    	play_sound(PIN);
+#     if PLAY_SWITCH_1 == 1:
 
-    	# TODO: move internally
-    	# from subprocess import call
-    	# call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + CURRENT_SOUND_BIT])
+#         print "play"
+#         play_sound(PLAY_SWITCH_1);
 
-    	# TODO: flash led
-    	# GPIO.output(PLAY_LED_2,GPIO.LOW)
-    	# time.sleep(0.05)
+#         # TODO: move internally
+#         # from subprocess import call
+#         # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + FIRST_SOUND_BIT])
 
-    else
-    	# call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
-    end
+#         # TODO: flash led
+#         # GPIO.output(PLAY_LED_2,GPIO.LOW)
+#         # time.sleep(0.05)
+
+#     else:
+#         print "record"
+#         # call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
+  
 
     
 
 
-except KeyboardInterrupt:
+# except KeyboardInterrupt:
     
-    GPIO.cleanup()       # clean up GPIO on CTRL+C exit
+#     GPIO.cleanup()       # clean up GPIO on CTRL+C exit
 
 
+
+# ******************************************
+#           CLEANUP
+# ******************************************
 
 GPIO.cleanup()           # clean up GPIO on normal exit
 
 
 
-	
+    
 
 
 
