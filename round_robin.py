@@ -21,8 +21,8 @@ def play_sound( filename ):
 
   print "playing : " + filename
 
-  # from subprocess import call
-  # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
+  from subprocess import call
+  call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
     
   return
 

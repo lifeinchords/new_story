@@ -34,7 +34,7 @@ ITEM LIST
 1 Raspberry Pi, Rev 2 board
 4 switches
 1 breadboard
-
+patience!
 
 
 
