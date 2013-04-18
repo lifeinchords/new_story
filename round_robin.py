@@ -1,3 +1,11 @@
+#!/usr/bin/env python2.7
+# script by Steven J. Dale
+# adapted from GPIO Rpi articles, by Alex Eames/ http://RasPi.tv/
+# http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio
+# http://raspi.tv/2013/how-to-use-interrupts-with-python-on-the-raspberry-pi-and-rpi-gpio-part-2
+# http://raspi.tv/tag/multiple-threaded-callbacks-in-rpi-gpio-with-python-on-the-raspberry-pi
+
+
 def play_sound( message ):
 	print "* enter playing sound ... "
 
@@ -29,18 +37,18 @@ GPIO.setmode(GPIO.BCM)
 # 3 momentary buttons, for playing separate audio files
 # each button has corresponding LED 
 PLAY_SWITCH_1 = 17
-PLAY_LED_1	= 18
+# PLAY_LED_1	= 18
 
 PLAY_SWITCH_2 = 22
-PLAY_LED_2	= 23
+# PLAY_LED_2	= 23
 
 PLAY_SWITCH_3 = 25  
-PLAY_LED_3	= 9
+# PLAY_LED_3	= 9
 
 # 1 momentary button for triggering a sound recording
 # with corresponding LED
 RECORD_SWITCH = 8
-RECORD_LED	= 11
+# RECORD_LED	= 11
 
 
 
@@ -55,10 +63,10 @@ GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 # for LEDs
-GPIO.setup(PLAY_LED_1, GPIO.OUT)
-GPIO.setup(PLAY_LED_2, GPIO.OUT)
-GPIO.setup(PLAY_LED_3, GPIO.OUT)
-GPIO.setup(RECORD_LED, GPIO.OUT)
+# GPIO.setup(PLAY_LED_1, GPIO.OUT)
+# GPIO.setup(PLAY_LED_2, GPIO.OUT)
+# GPIO.setup(PLAY_LED_3, GPIO.OUT)
+# GPIO.setup(RECORD_LED, GPIO.OUT)
 
 
 
