@@ -47,10 +47,10 @@ RECORD_LED	= 11
 # set up pins for switches, as inputs with pull up resistors
 # prevents having to do them in hardware
 # more: http://www.cl.cam.ac.uk/projects/raspberrypi/tutorials/robot/buttons_and_switches/
-GPIO.setup(PLAY_SWITCH_1, GPIO.IN)
-GPIO.setup(PLAY_SWITCH_2, GPIO.IN)
-GPIO.setup(PLAY_SWITCH_3, GPIO.IN)
-GPIO.setup(RECORD_SWITCH, GPIO.IN)
+GPIO.setup(PLAY_SWITCH_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(PLAY_SWITCH_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(PLAY_SWITCH_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 
@@ -78,29 +78,42 @@ THIRD_MR_SOUND_BIT	= "bit_3.wav"
 bit_count = 0
 
 
-last_reading = 0
 
-while True:
+try:
+    GPIO.wait_for_edge(PIN, GPIO.FALLING) # Falling edge detected. script continues
+    
+    # determine to play or record
+    # TODO: 
+
+    if 
+    	play_sound(PIN);
+
+    	# TODO: move internally
+    	# from subprocess import call
+    	# call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + CURRENT_SOUND_BIT])
+
+    	# TODO: flash led
+    	# GPIO.output(PLAY_LED_2,GPIO.LOW)
+    	# time.sleep(0.05)
+
+    else
+    	# call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
+    end
+
+    
+
+
+except KeyboardInterrupt:
+    
+    GPIO.cleanup()       # clean up GPIO on CTRL+C exit
+
+
+
+GPIO.cleanup()           # clean up GPIO on normal exit
+
+
+
 	
-	this_reading = GPIO.input(PLAY_SWITCH_2)
-	GPIO.output(PLAY_LED_2,GPIO.HIGH)
-
-	if ((not last_reading) and this_reading):
-		print (str(PLAY_SWITCH_2) + " : pressed")
-		
-		from subprocess import call
-		
-		# play
-		call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + CURRENT_SOUND_BIT])
-		
-
-		# record
-		# call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
-
-	last_reading = this_reading
-	GPIO.output(PLAY_LED_2,GPIO.LOW)
-
-	time.sleep(0.05)
 
 
 
