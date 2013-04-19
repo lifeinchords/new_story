@@ -14,28 +14,12 @@ import subprocess
 import glob
 import os
 
-# get story size
-# TODO: 
-# if local: read number of files in designated directory 
-# if remote: request count
-bit_count = 0
-file_array = glob.glob("/home/pi/code/new_story/sounds/b_*.wav")
-bit_array = []
-
-for bit in file_array:
-  head, tail = os.path.split(bit)
-  bit_array.append(int(tail.split('.')[0].split('_')[1]))
-
-bit_array.sort()
-bit_count = len(bit_array)
-next_recording_number = bit_count + 1
-
 
 
 PROJECT_PATH = "/home/pi/code/new_story"
 SOUND_BITS_PATH = "sounds"
-FULL_PATH = PROJECT_PATH + "/" + SOUND_BITS_PATH
 
+FULL_PATH = PROJECT_PATH + "/" + SOUND_BITS_PATH
 
 
 
@@ -43,31 +27,45 @@ FULL_PATH = PROJECT_PATH + "/" + SOUND_BITS_PATH
 #           FUNCTION DEFS
 # ******************************************
 
+def get_next_bit_number():
+
+  file_array = glob.glob("/home/pi/code/new_story/sounds/b_*.wav")
+  bit_array = []
+
+  for bit in file_array:
+    head, tail = os.path.split(bit)
+    bit_array.append(int(tail.split('.')[0].split('_')[1]))
+
+  bit_array.sort()
+  return len(bit_array) + 1
+
+
 def play_sound( filename ):
 
   subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", "sounds/" + filename ])
   return
 
 
-def record_sound():
+# && \
+#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number)) + ".wav " + FULL_PATH + "/3.wav && \
+#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 1 )) + ".wav " + PFULL_PATH + "/2.wav && \
+#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 2)) + ".wav " + FULL_PATH + "/1.wav"
+
+def record_sound(  ):
 
   # 1. play countdown tone
   # 2. record
   # 3. normalize
 
+  next_recording_number = get_next_bit_number()
+  print str(next_recording_number)
+
   # call by chaining, as we *want* blocking, or else other button presses would mess things up by running
   subprocess.call ([ "aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && \
-                      arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 20 -D plughw:0,0 sounds/b_" + str(next_recording) + ".wav && \
-                      normalize-audio sounds/b_" + str(next_recording) + ".wav && \
-                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number)) + ".wav " + FULL_PATH + "/3.wav && \
-                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 1 ))+ ".wav " + PFULL_PATH + "/2.wav && \
-                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 2))+ ".wav " + FULL_PATH + "/1.wav"
+                      arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/b_" + str("{0:03d}".format(next_recording_number)) + ".wav && \
+                      normalize-audio sounds/b_" + str("{0:03d}".format(next_recording_number)) + ".wav "
 
                     ], shell=True)
-
-  next_recording += 1
-
-  return
 
 
 
@@ -97,6 +95,7 @@ def button_callback( channel ):
 
   else:
     press = " not wired"
+
 
   return
 
