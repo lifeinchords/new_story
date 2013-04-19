@@ -10,7 +10,7 @@
 import RPi.GPIO as GPIO
 from time import gmtime, strftime
 import time
-
+import subprocess
 
 
 # ******************************************
@@ -19,28 +19,24 @@ import time
 
 def play_sound( filename ):
 
-  print "playing : " + filename
-
-  from subprocess import call
-  call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
+  subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
 
   return
 
 
 def record_sound(  ):
 
-  # from subprocess import call
-  # record routine here
+  # 1. play countdown tone
+  # 2. record
+  # 3. normalize
+  subprocess.call (["sh", "/home/pi/code/new_story/play_sound.sh"])
 
-  print "recording : "
-  # from subprocess import call
-  # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/countdown-v2.wav"])
-  
-  from subprocess import call
-  call (["arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav && normalize-audio sounds/new_recording.wav"], shell=True)
-  
-  # from subprocess import call
-  # call (["normalize-audio", "sounds/new_recording" ])
+  # subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", "countdown-v2.wav"])
+  # subprocess.call (["ls"])
+
+
+  #call (["aplay -f S16_LE -D plughw:0,0 -r 8000 " + PROJECT_PATH + "/countdown-v2.wav; arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav; normalize-audio sounds/new_recording.wav"], shell=True)
+  # call (["aplay -f S16_LE -D plughw:0,0 -r 8000 " + PROJECT_PATH + "/countdown-v2.wav; arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav; normalize-audio sounds/new_recording.wav"], shell=True)
   
   return
 
@@ -48,29 +44,29 @@ def record_sound(  ):
 
 def button_callback( channel ):  
 
-    if channel == PLAY_SWITCH_1:
-      play_sound("b1.wav")
-      press = "play 1"
+  print
+  print("callback: " + strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : pin %s'%channel)
 
-    elif channel == PLAY_SWITCH_2:
-      play_sound("b2.wav")
-      press = "play 2"
+  if channel == PLAY_SWITCH_1:
+    press = "registered play button 1 hit"
+    play_sound("b1.wav")
 
-    elif channel == PLAY_SWITCH_3:
-      play_sound("b3.wav")
-      press = "play 3"
+  elif channel == PLAY_SWITCH_2:
+    press = "registered play button 2 hit"
+    play_sound("b2.wav")
 
-    elif channel == RECORD_SWITCH:
-      press = "record"
-      record_sound()
+  elif channel == PLAY_SWITCH_3:
+    press = "registered play button 3 hit"
+    play_sound("b3.wav")
 
-    else:
-      press = " not wired"
+  elif channel == RECORD_SWITCH:
+    press = "registered record hit"
+    record_sound()
 
-    print(strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : pin %s'%channel + " : " + press) 
-    print
+  else:
+    press = " not wired"
 
-    return
+  return
 
 # ******************************************
 #           INITIALIZE
@@ -135,10 +131,10 @@ GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 bit_count = 0
 
 
-GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.BOTH, callback=button_callback, bouncetime=200) 
-GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.BOTH, callback=button_callback, bouncetime=200) 
-GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.BOTH, callback=button_callback, bouncetime=200) 
-GPIO.add_event_detect(RECORD_SWITCH, GPIO.BOTH, callback=button_callback, bouncetime=200) 
+GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(RECORD_SWITCH, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
 
 
 # ******************************************
