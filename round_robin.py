@@ -46,10 +46,6 @@ def play_sound( filename ):
   return
 
 
-# && \
-#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number)) + ".wav " + FULL_PATH + "/3.wav && \
-#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 1 )) + ".wav " + PFULL_PATH + "/2.wav && \
-#                       ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 2)) + ".wav " + FULL_PATH + "/1.wav"
 
 def record_sound(  ):
 
@@ -61,10 +57,19 @@ def record_sound(  ):
   print str(next_recording_number)
 
   # call by chaining, as we *want* blocking, or else other button presses would mess things up by running
+  # 1: play countdown sound to alert user recording is about to begin
+  # 2: record their contribution, using a filename that is next in the series
+  # 3: normalize to account for low mic vol, user movement
+  # 4: delete old symbolic links
+  # 5: create new symbolic links for the most recent 3 sounds that the UI uses.
+
   subprocess.call ([ "aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && \
                       arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/b_" + str("{0:03d}".format(next_recording_number)) + ".wav && \
-                      normalize-audio sounds/b_" + str("{0:03d}".format(next_recording_number)) + ".wav "
-
+                      normalize-audio sounds/b_" + str("{0:03d}".format(next_recording_number)) + ".wav  && \
+                      rm sounds/3.wav && rm sounds/2.wav && rm sounds/1.wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number)) + ".wav " + FULL_PATH + "/3.wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 1 )) + ".wav " + FULL_PATH + "/2.wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 2)) + ".wav " + FULL_PATH + "/1.wav" \
                     ], shell=True)
 
 
