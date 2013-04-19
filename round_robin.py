@@ -29,10 +29,10 @@ def record_sound(  ):
   # 1. play countdown tone
   # 2. record
   # 3. normalize
-  subprocess.call (["sh", "/home/pi/code/new_story/play_sound.sh"])
+  # subprocess.call (["sh", "/home/pi/code/new_story/play_sound.sh"])
 
-  # subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", "countdown-v2.wav"])
-  # subprocess.call (["ls"])
+  # subprocess.call (["aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && ls -al && normalize-audio sounds/new_recording.wav"], shell=True)
+
 
 
   #call (["aplay -f S16_LE -D plughw:0,0 -r 8000 " + PROJECT_PATH + "/countdown-v2.wav; arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav; normalize-audio sounds/new_recording.wav"], shell=True)
@@ -88,12 +88,15 @@ RUN_TYPE = 0
 # see : http://log.liminastudio.com/writing/tutorials/tutorial-how-to-use-your-raspberry-pi-like-an-arduino
 GPIO.setmode(GPIO.BCM)
 
+# stub, not in use
+STUB = 0
+
 # 3 momentary buttons, for playing separate audio files
 # each button has corresponding LED 
-PLAY_SWITCH_1 = 23
+PLAY_SWITCH_1 = 18
 # PLAY_LED_1    = 17
 
-PLAY_SWITCH_2 = 24
+PLAY_SWITCH_2 = 23
 # PLAY_LED_2    = 22
 
 PLAY_SWITCH_3 = 25  
@@ -101,7 +104,7 @@ PLAY_SWITCH_3 = 25
 
 # 1 momentary button for triggering a sound recording
 # with corresponding LED
-RECORD_SWITCH = 27
+RECORD_SWITCH = 8
 # RECORD_LED    = 11
 
 
@@ -113,6 +116,8 @@ GPIO.setup(PLAY_SWITCH_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(PLAY_SWITCH_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(PLAY_SWITCH_3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+GPIO.setup(STUB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 
@@ -144,6 +149,9 @@ GPIO.add_event_detect(RECORD_SWITCH, GPIO.PUD_UP, callback=button_callback, boun
 try: 
   raw_input('chillin .. . .')
 
+  GPIO.wait_for_edge(7, GPIO.BOTH)  
+
+
 except KeyboardInterrupt:
   GPIO.cleanup()       # clean up GPIO on CTRL+C exit
 
@@ -158,11 +166,3 @@ GPIO.cleanup()           # clean up GPIO on normal exit
 
 
     
-
-
-
-
-
-
-
-
