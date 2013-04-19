@@ -31,13 +31,9 @@ def record_sound(  ):
   # 3. normalize
   # subprocess.call (["sh", "/home/pi/code/new_story/play_sound.sh"])
 
-  # subprocess.call (["aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && ls -al && normalize-audio sounds/new_recording.wav"], shell=True)
+  subprocess.call (["aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav && normalize-audio sounds/new_recording.wav"], shell=True)
 
 
-
-  #call (["aplay -f S16_LE -D plughw:0,0 -r 8000 " + PROJECT_PATH + "/countdown-v2.wav; arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav; normalize-audio sounds/new_recording.wav"], shell=True)
-  # call (["aplay -f S16_LE -D plughw:0,0 -r 8000 " + PROJECT_PATH + "/countdown-v2.wav; arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav; normalize-audio sounds/new_recording.wav"], shell=True)
-  
   return
 
 
