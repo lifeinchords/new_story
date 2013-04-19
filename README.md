@@ -52,6 +52,8 @@ TODO:
 
 
 V2:
+
+- user defined end to recording
 - flash LED when playing or recording
 - recording: flash faster as time is running out
 - confirm, rerecord mechanism

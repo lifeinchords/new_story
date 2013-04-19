@@ -27,17 +27,21 @@ def play_sound( filename ):
   return
 
 
-def record_sound( message, pin ):
+def record_sound(  ):
 
   # from subprocess import call
   # record routine here
 
-  print "reocording : " + filename
-  call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/countdown-v2.wav"])
-
-
-  call (["arecord", "-vv", "-f S16_LE", "-c 1", "-r 8000", "--buffer-size=5000", "-D plughw:0,0", "new_recording.wav"])
-  call (["normalize-audio", "sounds/" + filename ])
+  print "recording : "
+  # from subprocess import call
+  # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/countdown-v2.wav"])
+  
+  from subprocess import call
+  call (["arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav && normalize-audio sounds/new_recording.wav"], shell=True)
+  
+  # from subprocess import call
+  # call (["normalize-audio", "sounds/new_recording" ])
+  
   return
 
 
@@ -58,6 +62,7 @@ def button_callback( channel ):
 
     elif channel == RECORD_SWITCH:
       press = "record"
+      record_sound()
 
     else:
       press = " not wired"
@@ -65,6 +70,7 @@ def button_callback( channel ):
     print(strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : pin %s'%channel + " : " + press) 
     print
 
+    return
 
 # ******************************************
 #           INITIALIZE
@@ -129,10 +135,6 @@ GPIO.setup(RECORD_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 bit_count = 0
 
 
-
-
-# when a falling edge is detected, regardless of whatever   
-# else is happening in the program, the function my_callback will be run  
 GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.BOTH, callback=button_callback, bouncetime=200) 
 GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.BOTH, callback=button_callback, bouncetime=200) 
 GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.BOTH, callback=button_callback, bouncetime=200) 
@@ -143,37 +145,11 @@ GPIO.add_event_detect(RECORD_SWITCH, GPIO.BOTH, callback=button_callback, bounce
 #           MAIN
 # ******************************************
 
-raw_input('chillin .. . .')
+try: 
+  raw_input('chillin .. . .')
 
-# try:
-#     GPIO.wait_for_edge(PLAY_SWITCH_1, GPIO.FALLING) # Falling edge detected. script continues
-    
-#     # determine to play or record
-#     # TODO: 
-
-#     if PLAY_SWITCH_1 == 1:
-
-#         print "play"
-#         play_sound(PLAY_SWITCH_1);
-
-#         # TODO: move internally
-#         # from subprocess import call
-#         # call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + FIRST_SOUND_BIT])
-
-#         # TODO: flash led
-#         # GPIO.output(PLAY_LED_2,GPIO.LOW)
-#         # time.sleep(0.05)
-
-#     else:
-#         print "record"
-  
-
-    
-
-
-# except KeyboardInterrupt:
-    
-#     GPIO.cleanup()       # clean up GPIO on CTRL+C exit
+except KeyboardInterrupt:
+  GPIO.cleanup()       # clean up GPIO on CTRL+C exit
 
 
 
