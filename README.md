@@ -43,16 +43,19 @@ patience!
 
 TODO: 
 
-- trigger record button push sound file to round robin 
+- pad digits of recordings 
+- fix recordings get cut off
 - push sound file to round robin
 - record confirm 
 - play all submissions
-- fade sound in and out, trim sound file
-- combine steps into one process
+- trim sound file
+- fade sound in and out
 
 
 V2:
 
+- transition to PyAudio to record, not through shell command. 
+- fix up hack of chaining to block
 - user defined end to recording
 - flash LED when playing or recording
 - recording: flash faster as time is running out

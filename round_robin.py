@@ -11,6 +11,32 @@ import RPi.GPIO as GPIO
 from time import gmtime, strftime
 import time
 import subprocess
+import glob
+import os
+
+# get story size
+# TODO: 
+# if local: read number of files in designated directory 
+# if remote: request count
+bit_count = 0
+file_array = glob.glob("/home/pi/code/new_story/sounds/b_*.wav")
+bit_array = []
+
+for bit in file_array:
+  head, tail = os.path.split(bit)
+  bit_array.append(int(tail.split('.')[0].split('_')[1]))
+
+bit_array.sort()
+bit_count = len(bit_array)
+next_recording_number = bit_count + 1
+
+
+
+PROJECT_PATH = "/home/pi/code/new_story"
+SOUND_BITS_PATH = "sounds"
+FULL_PATH = PROJECT_PATH + "/" + SOUND_BITS_PATH
+
+
 
 
 # ******************************************
@@ -19,20 +45,27 @@ import subprocess
 
 def play_sound( filename ):
 
-  subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", PROJECT_PATH + "/" + SOUND_BITS_PATH + "/" + filename ])
-
+  subprocess.call (["aplay", "-f", "S16_LE", "-D", "plughw:0,0", "-r", "8000", "sounds/" + filename ])
   return
 
 
-def record_sound(  ):
+def record_sound():
 
   # 1. play countdown tone
   # 2. record
   # 3. normalize
-  # subprocess.call (["sh", "/home/pi/code/new_story/play_sound.sh"])
 
-  subprocess.call (["aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 5 -D plughw:0,0 sounds/new_recording.wav && normalize-audio sounds/new_recording.wav"], shell=True)
+  # call by chaining, as we *want* blocking, or else other button presses would mess things up by running
+  subprocess.call ([ "aplay -f S16_LE -D plughw:0,0 -r 8000 countdown-v2.wav && \
+                      arecord -vv -f S16_LE -c 1 -r 8000 --buffer-size=5000 -d 20 -D plughw:0,0 sounds/b_" + str(next_recording) + ".wav && \
+                      normalize-audio sounds/b_" + str(next_recording) + ".wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number)) + ".wav " + FULL_PATH + "/3.wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 1 ))+ ".wav " + PFULL_PATH + "/2.wav && \
+                      ln -s " + FULL_PATH + "/b_" + str("{0:03d}".format(next_recording_number - 2))+ ".wav " + FULL_PATH + "/1.wav"
 
+                    ], shell=True)
+
+  next_recording += 1
 
   return
 
@@ -43,17 +76,20 @@ def button_callback( channel ):
   print
   print("callback: " + strftime("%Y-%m-%d %H:%M:%S", gmtime())  + ' : pin %s'%channel)
 
+  # filenames passed are symbolic links: 1, 2, 3
+  # which are always pointing to the 3 most recent sound bits
+  # 3 is the newest/latest
   if channel == PLAY_SWITCH_1:
     press = "registered play button 1 hit"
-    play_sound("b1.wav")
+    play_sound("1.wav")
 
   elif channel == PLAY_SWITCH_2:
     press = "registered play button 2 hit"
-    play_sound("b2.wav")
+    play_sound("2.wav")
 
   elif channel == PLAY_SWITCH_3:
     press = "registered play button 3 hit"
-    play_sound("b3.wav")
+    play_sound("3.wav")
 
   elif channel == RECORD_SWITCH:
     press = "registered record hit"
@@ -71,10 +107,6 @@ def button_callback( channel ):
 # raw_input('stop for now')
 
 
-PROJECT_PATH = "/home/pi/code/new_story"
-SOUND_BITS_PATH = "sounds"
-
-
 # 0 : local
 # 1: remote
 # TODO: implement logic
@@ -84,7 +116,8 @@ RUN_TYPE = 0
 # see : http://log.liminastudio.com/writing/tutorials/tutorial-how-to-use-your-raspberry-pi-like-an-arduino
 GPIO.setmode(GPIO.BCM)
 
-# stub, not in use
+# stub, not in use in hardware
+#  serves as a way to call wait for event for main script
 STUB = 0
 
 # 3 momentary buttons, for playing separate audio files
@@ -125,17 +158,12 @@ GPIO.setup(STUB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 
-# get story size
-# TODO: 
-# if local: read number of files in designated directory 
-# if remote: request count
-bit_count = 0
 
 
-GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
-GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
-GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
-GPIO.add_event_detect(RECORD_SWITCH, GPIO.PUD_UP, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(PLAY_SWITCH_1, GPIO.BOTH, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(PLAY_SWITCH_2, GPIO.BOTH, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(PLAY_SWITCH_3, GPIO.BOTH, callback=button_callback, bouncetime=300) 
+GPIO.add_event_detect(RECORD_SWITCH, GPIO.BOTH, callback=button_callback, bouncetime=300) 
 
 
 # ******************************************
